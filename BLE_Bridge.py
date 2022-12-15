@@ -3,7 +3,25 @@ from bleak import BleakClient, BleakScanner
 
 
 def notify_handler(sender, data):
-    print("Received data:", data)
+    global time_history, current_time, value1_history, value2_history, value3_history
+    # Check that the data is a 20-byte bytearray
+    if len(data) != 20:
+        print("Received invalid data: incorrect length")
+        return
+
+    # Check that the first two bytes of the data match the expected pattern
+    if data[0:2] != b"\x01\x02":
+        print("Received invalid data: incorrect pattern")
+        return
+
+    # Extract the values of value1, value2, and value3 from the data
+    value1 = int.from_bytes(data[6:9], byteorder="big", signed=True)
+    value2 = int.from_bytes(data[9:12], byteorder="big", signed=True)
+    value3 = int.from_bytes(data[12:15], byteorder="big", signed=True)
+
+    # Print the extracted values
+    print(f"Received values: value1 = {value1}, value2 = {value2}, value3 = {value3}")
+
 
 
 async def main():
