@@ -100,7 +100,7 @@ async def main():
     # Scan for devices
     print("Scanning for devices...")
     scanner = BleakScanner()
-    devices = await scanner.discover(timeout=2)
+    devices = await scanner.discover(timeout=5)
 
     # Print a list of discovered devices
     for i, device in enumerate(devices):
@@ -121,7 +121,7 @@ async def main():
     notifiable_characteristics = []
     i=0
     for characteristics in client.services.characteristics:
-        if client.services.get_characteristic(characteristics).properties[0] == 'notify':
+        if ('notify' in client.services.get_characteristic(characteristics).properties):
             print("{}. {}".format(i+1, client.services.get_characteristic(characteristics)))
             notifiable_characteristics.append(characteristics)
             i+=1
